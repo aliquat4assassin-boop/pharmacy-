@@ -1,0 +1,1984 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="صيدلية الفتح">
+<meta name="theme-color" content="#007AFF">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%23007AFF'/%3E%3Ctext x='90' y='120' font-size='100' text-anchor='middle' fill='white'%3E%F0%9F%92%8A%3C/text%3E%3C/svg%3E">
+<title>صيدلية الفتح - إدارة الديون</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Arabic', 'SF Arabic', 'Segoe UI', Tahoma, sans-serif;
+    background: #F2F2F7;
+    color: #000;
+    overflow-x: hidden;
+    overscroll-behavior-y: none;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-top: env(safe-area-inset-top);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    body { background: #000; color: #fff; }
+    .card, .nav-bar, .tab-bar, .stat-card { background: #1C1C1E !important; }
+    .list-row + .list-row, .input-row + .input-row { border-color: rgba(255,255,255,0.1) !important; }
+    .input-card { background: #1C1C1E !important; }
+    .row-title, .input-label { color: #fff !important; }
+    .nav-title { color: #fff; }
+    .search-box { background: rgba(255,255,255,0.1) !important; }
+    .row-sub, .stat-label { color: #8E8E93 !important; }
+  }
+
+  .app-container {
+    max-width: 500px;
+    margin: 0 auto;
+    min-height: 100vh;
+    position: relative;
+    padding-bottom: 90px;
+  }
+
+  .nav-bar {
+    background: rgba(248,248,248,0.94);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 0.5px solid rgba(60,60,67,0.18);
+  }
+
+  .nav-title {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+
+  .nav-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(120,120,128,0.16);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: #007AFF;
+    cursor: pointer;
+  }
+
+  .screen {
+    padding: 8px 0 20px;
+    display: none;
+  }
+  .screen.active { display: block; }
+
+  .hero-card {
+    margin: 12px 16px;
+    padding: 20px;
+    background: linear-gradient(135deg, #007AFF 0%, #5856D6 100%);
+    border-radius: 20px;
+    color: white;
+  }
+  .hero-label {
+    font-size: 13px;
+    opacity: 0.85;
+  }
+  .hero-value {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin: 6px 0 14px;
+  }
+  .hero-stats {
+    display: flex;
+    gap: 10px;
+    padding-top: 12px;
+    border-top: 0.5px solid rgba(255,255,255,0.25);
+  }
+  .hero-stat {
+    flex: 1;
+    text-align: center;
+  }
+  .hero-stat-label {
+    font-size: 11px;
+    opacity: 0.85;
+  }
+  .hero-stat-val {
+    font-size: 15px;
+    font-weight: 600;
+    margin-top: 2px;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 0 16px 12px;
+  }
+
+  .stat-card {
+    background: white;
+    border-radius: 14px;
+    padding: 14px;
+  }
+  .stat-label {
+    font-size: 12px;
+    color: #8E8E93;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+  }
+  .stat-value {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  }
+
+  .section-header {
+    font-size: 13px;
+    font-weight: 400;
+    color: #8E8E93;
+    padding: 16px 22px 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .section-header a {
+    color: #007AFF;
+    text-decoration: none;
+    font-size: 13px;
+    text-transform: none;
+    cursor: pointer;
+  }
+
+  .card {
+    background: white;
+    border-radius: 14px;
+    margin: 0 16px;
+    overflow: hidden;
+  }
+
+  .list-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .list-row:active { background: rgba(0,0,0,0.05); }
+  .list-row + .list-row {
+    border-top: 0.5px solid rgba(60,60,67,0.12);
+    margin-right: 60px;
+    padding-right: 0;
+  }
+  .list-row + .list-row {
+    border-top: 0.5px solid rgba(60,60,67,0.12);
+  }
+
+  .avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .avatar.lg { width: 72px; height: 72px; font-size: 22px; }
+
+  .row-content {
+    flex: 1;
+    min-width: 0;
+  }
+  .row-title {
+    font-size: 15px;
+    font-weight: 500;
+    color: #000;
+    margin-bottom: 2px;
+  }
+  .row-sub {
+    font-size: 12px;
+    color: #8E8E93;
+  }
+  .row-end {
+    text-align: left;
+    flex-shrink: 0;
+  }
+  .row-amount {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.2px;
+  }
+  .status-badge {
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 6px;
+    margin-top: 3px;
+    display: inline-block;
+    font-weight: 500;
+  }
+
+  .tab-bar {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 500px;
+    background: rgba(248,248,248,0.94);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 0.5px solid rgba(60,60,67,0.18);
+    display: flex;
+    justify-content: space-around;
+    padding: 6px 0 calc(6px + env(safe-area-inset-bottom));
+    z-index: 100;
+  }
+
+  .tab-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 6px 4px;
+    cursor: pointer;
+    color: #8E8E93;
+    transition: color 0.2s;
+  }
+  .tab-item.active { color: #007AFF; }
+  .tab-item svg { width: 24px; height: 24px; }
+  .tab-item span { font-size: 10px; font-weight: 500; }
+
+  .search-box {
+    margin: 4px 16px 8px;
+    padding: 9px 12px;
+    background: rgba(120,120,128,0.12);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .search-box input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-size: 14px;
+    outline: none;
+    color: inherit;
+    font-family: inherit;
+  }
+  .search-box input::placeholder { color: #8E8E93; }
+
+  .filter-chips {
+    display: flex;
+    gap: 6px;
+    padding: 4px 16px 10px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .filter-chips::-webkit-scrollbar { display: none; }
+
+  .chip {
+    background: white;
+    padding: 7px 14px;
+    border-radius: 14px;
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+    cursor: pointer;
+    border: none;
+    color: inherit;
+    transition: all 0.2s;
+  }
+  .chip.active { background: #007AFF; color: white; }
+
+  .fab {
+    position: fixed;
+    bottom: 80px;
+    left: 16px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #007AFF;
+    color: white;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(0,122,255,0.4);
+    z-index: 99;
+  }
+
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 1000;
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .modal-overlay.active { display: flex; }
+
+  .modal {
+    background: #F2F2F7;
+    width: 100%;
+    max-width: 500px;
+    max-height: 90vh;
+    border-radius: 16px 16px 0 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .modal-header {
+    background: rgba(248,248,248,0.94);
+    backdrop-filter: blur(20px);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 0.5px solid rgba(60,60,67,0.18);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .modal-title { font-size: 17px; font-weight: 600; }
+  .modal-btn {
+    background: none;
+    border: none;
+    color: #007AFF;
+    font-size: 16px;
+    cursor: pointer;
+    font-family: inherit;
+    padding: 4px 8px;
+  }
+  .modal-btn.bold { font-weight: 600; }
+  .modal-btn:disabled { opacity: 0.4; }
+
+  .modal-body { padding: 16px; }
+
+  .type-toggle {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .type-btn {
+    flex: 1;
+    padding: 14px;
+    background: white;
+    border-radius: 14px;
+    font-size: 14px;
+    font-weight: 600;
+    border: 2px solid transparent;
+    cursor: pointer;
+    color: #8E8E93;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+  .type-btn.active.debt {
+    background: rgba(255,59,48,0.1);
+    color: #FF3B30;
+    border-color: #FF3B30;
+  }
+  .type-btn.active.pay {
+    background: rgba(52,199,89,0.1);
+    color: #34C759;
+    border-color: #34C759;
+  }
+
+  .amount-display {
+    text-align: center;
+    margin: 16px 0;
+  }
+  .amount-label {
+    font-size: 12px;
+    color: #8E8E93;
+    margin-bottom: 6px;
+  }
+  .amount-input {
+    font-size: 42px;
+    font-weight: 700;
+    border: none;
+    background: transparent;
+    text-align: center;
+    width: 100%;
+    outline: none;
+    color: #FF3B30;
+    font-family: inherit;
+    letter-spacing: -1px;
+  }
+  .amount-input.pay { color: #34C759; }
+
+  .input-card {
+    background: white;
+    border-radius: 14px;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+
+  .input-row {
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .input-row + .input-row {
+    border-top: 0.5px solid rgba(60,60,67,0.12);
+  }
+
+  .input-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 15px;
+    color: #000;
+  }
+  .input-label .icon-box {
+    width: 28px;
+    height: 28px;
+    background: rgba(120,120,128,0.15);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+  }
+
+  .input-value {
+    font-size: 15px;
+    color: #8E8E93;
+    flex: 1;
+    text-align: left;
+  }
+  .input-value.filled { color: #000; }
+  .input-value input, .input-value select, .input-value textarea {
+    width: 100%;
+    border: none;
+    background: transparent;
+    text-align: left;
+    font-size: 15px;
+    color: #000;
+    outline: none;
+    font-family: inherit;
+    direction: rtl;
+  }
+  .input-value input::placeholder { color: #8E8E93; }
+  .input-value select { appearance: none; cursor: pointer; padding-left: 20px; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'%3E%3Cpath d='M2 4l3 3 3-3' stroke='%238E8E93' fill='none' stroke-width='1.5'/%3E%3C/svg%3E") no-repeat left center; }
+
+  .field-row-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-size: 15px;
+    color: #000;
+    outline: none;
+    text-align: left;
+    font-family: inherit;
+  }
+
+  .form-section-title {
+    font-size: 13px;
+    color: #8E8E93;
+    padding: 14px 22px 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .balance-card {
+    background: linear-gradient(135deg, #FF3B30, #FF9500);
+    color: white;
+    padding: 18px;
+    border-radius: 16px;
+    margin: 12px 16px;
+    text-align: center;
+  }
+  .balance-card.good { background: linear-gradient(135deg, #007AFF, #5856D6); }
+  .balance-card.paid { background: linear-gradient(135deg, #34C759, #30B0C7); }
+  .balance-card.medium { background: linear-gradient(135deg, #FF9500, #FFCC00); }
+  .balance-label { font-size: 12px; opacity: 0.9; }
+  .balance-value { font-size: 32px; font-weight: 700; margin-top: 4px; letter-spacing: -0.5px; }
+
+  .mini-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    margin: 0 16px 12px;
+  }
+  .mini-stat {
+    background: white;
+    padding: 10px 8px;
+    border-radius: 12px;
+    text-align: center;
+  }
+  .mini-stat-label { font-size: 10px; color: #8E8E93; margin-bottom: 2px; }
+  .mini-stat-value { font-size: 15px; font-weight: 600; }
+
+  .quick-actions {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    margin: 0 16px 12px;
+  }
+  .action-btn {
+    background: white;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 6px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    color: #007AFF;
+    font-family: inherit;
+  }
+  .action-btn svg { width: 18px; height: 18px; }
+  .action-btn span { font-size: 11px; font-weight: 500; }
+
+  .transaction-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    cursor: pointer;
+  }
+  .transaction-row + .transaction-row {
+    border-top: 0.5px solid rgba(60,60,67,0.12);
+  }
+  .trans-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 16px;
+  }
+  .trans-icon.debt { background: rgba(255,59,48,0.15); color: #FF3B30; }
+  .trans-icon.pay { background: rgba(52,199,89,0.15); color: #34C759; }
+
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #8E8E93;
+  }
+  .empty-state-icon { font-size: 50px; opacity: 0.5; margin-bottom: 12px; }
+  .empty-state-title { font-size: 17px; font-weight: 500; margin-bottom: 4px; }
+  .empty-state-sub { font-size: 13px; }
+
+  .chart-card {
+    background: white;
+    border-radius: 14px;
+    margin: 0 16px 12px;
+    padding: 16px;
+  }
+  .chart-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 14px;
+  }
+
+  .progress-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .progress-name {
+    font-size: 12px;
+    width: 100px;
+    flex-shrink: 0;
+    text-align: right;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .progress-bar {
+    flex: 1;
+    height: 6px;
+    background: rgba(0,0,0,0.06);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 3px;
+  }
+  .progress-amount {
+    font-size: 12px;
+    font-weight: 600;
+    width: 70px;
+    text-align: left;
+  }
+
+  .donut-container {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .donut-svg { width: 130px; height: 130px; flex-shrink: 0; }
+  .legend { flex: 1; }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    margin-bottom: 6px;
+  }
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  .delete-btn {
+    color: #FF3B30 !important;
+    font-weight: 500;
+  }
+
+  .install-banner {
+    background: linear-gradient(135deg, #34C759, #00C7BE);
+    color: white;
+    padding: 12px 16px;
+    margin: 8px 16px;
+    border-radius: 12px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+  }
+  .install-banner.hidden { display: none; }
+  .install-banner-text { flex: 1; }
+  .install-banner-close {
+    background: rgba(255,255,255,0.25);
+    border: none;
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 14px;
+  }
+
+  /* Welcome screen for first time */
+  .welcome-overlay {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(135deg, #007AFF, #5856D6);
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 40px 30px;
+    color: white;
+    text-align: center;
+  }
+  .welcome-overlay.active { display: flex; }
+  .welcome-icon { font-size: 80px; margin-bottom: 20px; }
+  .welcome-title { font-size: 28px; font-weight: 700; margin-bottom: 10px; }
+  .welcome-sub { font-size: 16px; opacity: 0.9; margin-bottom: 30px; line-height: 1.6; }
+  .welcome-btn {
+    background: white;
+    color: #007AFF;
+    border: none;
+    padding: 14px 40px;
+    border-radius: 30px;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .welcome-steps {
+    background: rgba(255,255,255,0.15);
+    border-radius: 14px;
+    padding: 16px;
+    margin: 20px 0;
+    font-size: 14px;
+    text-align: right;
+    width: 100%;
+    max-width: 320px;
+  }
+  .welcome-steps div { margin-bottom: 8px; }
+</style>
+</head>
+<body>
+
+<!-- شاشة الترحيب والتثبيت -->
+<div class="welcome-overlay" id="welcomeOverlay">
+  <div class="welcome-icon">💊</div>
+  <div class="welcome-title">صيدلية الفتح</div>
+  <div class="welcome-sub">نظام إدارة ديون الشركات والتجار</div>
+
+  <div class="welcome-steps">
+    <div style="font-weight: 600; margin-bottom: 12px;">📱 لتثبيت التطبيق على iPhone:</div>
+    <div>1️⃣ افتح هذه الصفحة في <b>Safari</b></div>
+    <div>2️⃣ اضغط زر المشاركة <span style="display:inline-block;background:rgba(255,255,255,0.3);padding:2px 8px;border-radius:6px">⬆️</span></div>
+    <div>3️⃣ اختر <b>"Add to Home Screen"</b></div>
+    <div>4️⃣ اضغط <b>Add</b></div>
+    <div style="margin-top: 12px; opacity: 0.85;">✨ سيظهر التطبيق كأيقونة على شاشة iPhone</div>
+  </div>
+
+  <button class="welcome-btn" onclick="hideWelcome()">ابدأ الاستخدام</button>
+</div>
+
+<div class="app-container">
+
+<!-- شاشة الرئيسية -->
+<div class="screen active" id="screen-dashboard">
+  <div class="nav-bar">
+    <button class="nav-btn" onclick="exportData()" title="نسخ احتياطي">⬇️</button>
+    <div class="nav-title">الرئيسية</div>
+    <button class="nav-btn" onclick="openAddTransaction()">＋</button>
+  </div>
+
+  <div id="installBanner" class="install-banner hidden">
+    <div style="font-size: 24px;">📱</div>
+    <div class="install-banner-text">
+      <div style="font-weight: 600;">ثبّت التطبيق على iPhone</div>
+      <div style="font-size: 11px; opacity: 0.9;">Safari → مشاركة → Add to Home Screen</div>
+    </div>
+    <button class="install-banner-close" onclick="dismissInstall()">✕</button>
+  </div>
+
+  <div class="hero-card">
+    <div class="hero-label">إجمالي الديون الحالية</div>
+    <div class="hero-value" id="totalBalance">0.00 د.ل</div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-label">ديون جديدة</div>
+        <div class="hero-stat-val" id="totalNewDebts">0</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-label">مسدد</div>
+        <div class="hero-stat-val" id="totalPaid">0</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-label">تجار</div>
+        <div class="hero-stat-val" id="suppliersCount">0</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">↗ ديون هذا الشهر</div>
+      <div class="stat-value" style="color:#FF3B30" id="monthlyDebts">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">↘ مدفوعات</div>
+      <div class="stat-value" style="color:#34C759" id="monthlyPayments">0</div>
+    </div>
+  </div>
+
+  <div class="section-header">
+    <span>أعلى التجار رصيداً</span>
+    <a onclick="switchTab('suppliers')">الكل ›</a>
+  </div>
+  <div class="card" id="topSuppliers"></div>
+
+  <div class="section-header">
+    <span>آخر المعاملات</span>
+  </div>
+  <div class="card" id="recentTransactions"></div>
+</div>
+
+<!-- شاشة التجار -->
+<div class="screen" id="screen-suppliers">
+  <div class="nav-bar">
+    <button class="nav-btn" onclick="openAddSupplier()">＋</button>
+    <div class="nav-title">التجار</div>
+    <div style="width: 36px;"></div>
+  </div>
+
+  <div class="search-box">
+    <span>🔍</span>
+    <input type="text" id="supplierSearch" placeholder="ابحث عن شركة..." oninput="renderSuppliers()">
+  </div>
+
+  <div class="filter-chips" id="filterChips">
+    <button class="chip active" onclick="setFilter('all', this)">الكل · <span id="count-all">0</span></button>
+    <button class="chip" onclick="setFilter('high', this)">🔴 مرتفع · <span id="count-high">0</span></button>
+    <button class="chip" onclick="setFilter('medium', this)">🟡 متوسط · <span id="count-medium">0</span></button>
+    <button class="chip" onclick="setFilter('good', this)">🔵 جيد · <span id="count-good">0</span></button>
+    <button class="chip" onclick="setFilter('paid', this)">🟢 مسدد · <span id="count-paid">0</span></button>
+  </div>
+
+  <div class="card" id="suppliersList"></div>
+</div>
+
+<!-- شاشة المعاملات -->
+<div class="screen" id="screen-transactions">
+  <div class="nav-bar">
+    <button class="nav-btn" onclick="openAddTransaction()">＋</button>
+    <div class="nav-title">المعاملات</div>
+    <div style="width: 36px;"></div>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">↗ إجمالي الديون</div>
+      <div class="stat-value" style="color:#FF3B30" id="allDebts">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">↘ إجمالي المسدد</div>
+      <div class="stat-value" style="color:#34C759" id="allPayments">0</div>
+    </div>
+  </div>
+
+  <div class="filter-chips">
+    <button class="chip active" onclick="setTransFilter('all', this)">الكل</button>
+    <button class="chip" onclick="setTransFilter('debt', this)">ديون</button>
+    <button class="chip" onclick="setTransFilter('pay', this)">مدفوعات</button>
+  </div>
+
+  <div id="transactionsList"></div>
+</div>
+
+<!-- شاشة التحليل -->
+<div class="screen" id="screen-analytics">
+  <div class="nav-bar">
+    <button class="nav-btn" onclick="exportData()">⬇️</button>
+    <div class="nav-title">التحليل</div>
+    <div style="width: 36px;"></div>
+  </div>
+
+  <div class="chart-card">
+    <div class="chart-title">توزيع التجار حسب الحالة</div>
+    <div class="donut-container">
+      <svg class="donut-svg" viewBox="0 0 36 36" id="donutChart"></svg>
+      <div class="legend" id="donutLegend"></div>
+    </div>
+  </div>
+
+  <div class="chart-card">
+    <div class="chart-title">أعلى 5 تجار رصيداً</div>
+    <div id="topBarChart"></div>
+  </div>
+
+  <div class="chart-card">
+    <div class="chart-title">الحركة الشهرية (آخر 6 أشهر)</div>
+    <svg id="lineChart" viewBox="0 0 320 160" style="width:100%; height:160px;"></svg>
+    <div style="display:flex; gap:14px; font-size:11px; margin-top:8px; justify-content:center;">
+      <div style="display:flex; align-items:center; gap:4px;">
+        <div style="width:12px; height:3px; background:#FF3B30; border-radius:2px;"></div> ديون
+      </div>
+      <div style="display:flex; align-items:center; gap:4px;">
+        <div style="width:12px; height:3px; background:#34C759; border-radius:2px;"></div> مدفوعات
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- شاشة الإعدادات -->
+<div class="screen" id="screen-settings">
+  <div class="nav-bar">
+    <div style="width: 36px;"></div>
+    <div class="nav-title">الإعدادات</div>
+    <div style="width: 36px;"></div>
+  </div>
+
+  <div class="card" style="margin-top: 12px;">
+    <div class="list-row" style="padding: 16px;">
+      <div class="avatar" style="background:rgba(0,122,255,0.15); color:#007AFF;">💊</div>
+      <div class="row-content">
+        <div class="row-title">صيدلية الفتح</div>
+        <div class="row-sub">نظام إدارة الديون - الإصدار 1.0</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-header"><span>الاستيراد والتصدير</span></div>
+  <div class="card">
+    <div class="list-row" onclick="exportData()">
+      <div style="font-size:20px;">⬇️</div>
+      <div class="row-content"><div class="row-title">تصدير نسخة احتياطية</div></div>
+    </div>
+    <div class="list-row" onclick="document.getElementById('importFile').click()">
+      <div style="font-size:20px;">⬆️</div>
+      <div class="row-content"><div class="row-title">استيراد من نسخة احتياطية</div></div>
+    </div>
+    <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+  </div>
+
+  <div class="section-header"><span>إدارة البيانات</span></div>
+  <div class="card">
+    <div class="list-row" onclick="loadSampleData()">
+      <div style="font-size:20px;">📋</div>
+      <div class="row-content">
+        <div class="row-title">تحميل بيانات تجريبية</div>
+        <div class="row-sub">10 شركات + معاملات للتجربة</div>
+      </div>
+    </div>
+    <div class="list-row delete-btn" onclick="clearAllData()">
+      <div style="font-size:20px;">🗑️</div>
+      <div class="row-content"><div class="row-title">حذف كل البيانات</div></div>
+    </div>
+  </div>
+
+  <div class="section-header"><span>تثبيت التطبيق</span></div>
+  <div class="card">
+    <div class="list-row" onclick="showInstallGuide()">
+      <div style="font-size:20px;">📱</div>
+      <div class="row-content">
+        <div class="row-title">دليل تثبيت التطبيق</div>
+        <div class="row-sub">إضافة التطبيق إلى الشاشة الرئيسية</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<!-- Tab Bar -->
+<div class="tab-bar">
+  <div class="tab-item active" onclick="switchTab('dashboard')" data-tab="dashboard">
+    <svg fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+    <span>الرئيسية</span>
+  </div>
+  <div class="tab-item" onclick="switchTab('suppliers')" data-tab="suppliers">
+    <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 7V3H2v18h20V7H12zm-8 4h2v2H4v-2zm0 4h2v2H4v-2zm6-4h2v2h-2v-2zm0 4h2v2h-2v-2zm-6-8h2v2H4V7zm6 0h2v2h-2V7zm8 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/></svg>
+    <span>التجار</span>
+  </div>
+  <div class="tab-item" onclick="switchTab('transactions')" data-tab="transactions">
+    <svg fill="currentColor" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/></svg>
+    <span>المعاملات</span>
+  </div>
+  <div class="tab-item" onclick="switchTab('analytics')" data-tab="analytics">
+    <svg fill="currentColor" viewBox="0 0 24 24"><path d="M11 2v20c-5.07-.5-9-4.79-9-10s3.93-9.5 9-10zm2.03 0v8.99H22c-.47-4.74-4.24-8.52-8.97-8.99zm0 11.01V22c4.74-.47 8.5-4.25 8.97-8.99h-8.97z"/></svg>
+    <span>التحليل</span>
+  </div>
+  <div class="tab-item" onclick="switchTab('settings')" data-tab="settings">
+    <svg fill="currentColor" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94 0 .31.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+    <span>إعدادات</span>
+  </div>
+</div>
+
+<!-- Modal: إضافة/تعديل تاجر -->
+<div class="modal-overlay" id="modalSupplier">
+  <div class="modal">
+    <div class="modal-header">
+      <button class="modal-btn" onclick="closeModal('modalSupplier')">إلغاء</button>
+      <div class="modal-title" id="supplierModalTitle">تاجر جديد</div>
+      <button class="modal-btn bold" onclick="saveSupplier()">حفظ</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-section-title">بيانات الشركة</div>
+      <div class="input-card">
+        <div class="input-row">
+          <div class="input-label"><div class="icon-box">🏢</div>اسم الشركة *</div>
+          <input class="field-row-input" type="text" id="supplierName" placeholder="مثال: شركة الحكمة">
+        </div>
+        <div class="input-row">
+          <div class="input-label"><div class="icon-box">👤</div>اسم المسؤول</div>
+          <input class="field-row-input" type="text" id="supplierContact" placeholder="اختياري">
+        </div>
+      </div>
+
+      <div class="form-section-title">التواصل</div>
+      <div class="input-card">
+        <div class="input-row">
+          <div class="input-label"><div class="icon-box">📱</div>رقم الهاتف</div>
+          <input class="field-row-input" type="tel" id="supplierPhone" placeholder="0912345678">
+        </div>
+        <div class="input-row">
+          <div class="input-label"><div class="icon-box">📍</div>العنوان</div>
+          <input class="field-row-input" type="text" id="supplierAddress" placeholder="اختياري">
+        </div>
+      </div>
+
+      <div class="form-section-title">المعلومات المالية</div>
+      <div class="input-card">
+        <div class="input-row">
+          <div class="input-label"><div class="icon-box">💰</div>الرصيد الافتتاحي</div>
+          <input class="field-row-input" type="number" id="supplierOpeningBalance" placeholder="0" step="0.01">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: إضافة معاملة -->
+<div class="modal-overlay" id="modalTransaction">
+  <div class="modal">
+    <div class="modal-header">
+      <button class="modal-btn" onclick="closeModal('modalTransaction')">إلغاء</button>
+      <div class="modal-title">معاملة جديدة</div>
+      <button class="modal-btn bold" id="saveTransBtn" onclick="saveTransaction()">حفظ</button>
+    </div>
+    <div class="modal-body">
+      <div class="type-toggle">
+        <button class="type-btn active debt" onclick="setTransType('debt', this)">↗ دين جديد</button>
+        <button class="type-btn pay" onclick="setTransType('pay', this)">↘ دفعة سداد</button>
+      </div>
+
+      <div class="amount-display">
+        <div class="amount-label">المبلغ بالدينار الليبي</div>
+        <input class="amount-input" type="number" id="transAmount" placeholder="0.00" step="0.01" inputmode="decimal">
+      </div>
+
+      <div class="input-card">
+        <div class="input-row">
+          <div class="input-label"><div class="icon-box">🏢</div>الشركة *</div>
+          <div class="input-value">
+            <select id="transSupplier"><option value="">اختر تاجراً</option></select>
+          </div>
+        </div>
+        <div class="input-row">
+          <div class="input-label"><div class="icon-box">📅</div>التاريخ</div>
+          <div class="input-value">
+            <input type="date" id="transDate">
+          </div>
+        </div>
+        <div class="input-row">
+          <div class="input-label"><div class="icon-box">📄</div>رقم الفاتورة</div>
+          <input class="field-row-input" type="text" id="transInvoice" placeholder="اختياري">
+        </div>
+        <div class="input-row">
+          <div class="input-label"><div class="icon-box">💳</div>طريقة الدفع</div>
+          <div class="input-value">
+            <select id="transPayment">
+              <option value="cash">نقدي</option>
+              <option value="bank">تحويل بنكي</option>
+              <option value="cheque">شيك</option>
+              <option value="deferred" selected>آجل</option>
+              <option value="card">بطاقة مصرفية</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="input-card">
+        <div style="padding: 12px 14px;">
+          <div style="font-size: 13px; color: #8E8E93; margin-bottom: 6px;">ملاحظات</div>
+          <textarea id="transNotes" rows="3" style="width:100%; border:none; background:transparent; font-size:14px; outline:none; resize:none; font-family:inherit; color:inherit;" placeholder="اختياري..."></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: تفاصيل التاجر -->
+<div class="modal-overlay" id="modalSupplierDetail">
+  <div class="modal">
+    <div class="modal-header">
+      <button class="modal-btn" onclick="closeModal('modalSupplierDetail')">إغلاق</button>
+      <div class="modal-title" id="detailModalTitle">تفاصيل التاجر</div>
+      <button class="modal-btn delete-btn" onclick="deleteCurrentSupplier()">حذف</button>
+    </div>
+    <div class="modal-body" id="supplierDetailBody"></div>
+  </div>
+</div>
+
+<script>
+// =================================================================
+// قاعدة البيانات - تستخدم localStorage (تبقى محفوظة دائماً على الجهاز)
+// =================================================================
+
+const DB_KEY_SUPPLIERS = 'pharmacy_suppliers';
+const DB_KEY_TRANSACTIONS = 'pharmacy_transactions';
+const DB_KEY_WELCOME = 'pharmacy_welcome_shown';
+
+const COLORS = ['FF3B30','FF9500','FFCC00','34C759','00C7BE','30B0C7','007AFF','5856D6','AF52DE','FF2D55'];
+
+function loadSuppliers() {
+  try { return JSON.parse(localStorage.getItem(DB_KEY_SUPPLIERS) || '[]'); }
+  catch(e) { return []; }
+}
+
+function loadTransactions() {
+  try { return JSON.parse(localStorage.getItem(DB_KEY_TRANSACTIONS) || '[]'); }
+  catch(e) { return []; }
+}
+
+function saveSuppliers(data) {
+  localStorage.setItem(DB_KEY_SUPPLIERS, JSON.stringify(data));
+}
+
+function saveTransactions(data) {
+  localStorage.setItem(DB_KEY_TRANSACTIONS, JSON.stringify(data));
+}
+
+// =================================================================
+// المساعدات
+// =================================================================
+
+function generateId() {
+  return 'id_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+}
+
+function getInitials(name) {
+  const words = name.split(' ').filter(w => !['شركة','مؤسسة'].includes(w));
+  if (words.length === 0) return name.substring(0, 2);
+  const first = words[0];
+  return first.length >= 2 ? first.substring(0, 2) : first;
+}
+
+function getColor(name) {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  return COLORS[Math.abs(hash) % COLORS.length];
+}
+
+function formatMoney(n) {
+  return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n) + ' د.ل';
+}
+
+function formatShort(n) {
+  return new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(n);
+}
+
+function formatDate(d) {
+  const date = new Date(d);
+  return date.getFullYear() + '/' + String(date.getMonth()+1).padStart(2,'0') + '/' + String(date.getDate()).padStart(2,'0');
+}
+
+function relativeDate(d) {
+  const days = Math.floor((Date.now() - new Date(d)) / 86400000);
+  if (days === 0) return 'اليوم';
+  if (days === 1) return 'أمس';
+  if (days < 7) return 'قبل ' + days + ' أيام';
+  if (days < 30) return 'قبل ' + Math.floor(days/7) + ' أسابيع';
+  return 'قبل ' + Math.floor(days/30) + ' شهر';
+}
+
+function getSupplierData(supplier) {
+  const transactions = loadTransactions().filter(t => t.supplierId === supplier.id);
+  const totalNewDebts = transactions.filter(t => t.type === 'debt').reduce((s, t) => s + t.amount, 0);
+  const totalPaid = transactions.filter(t => t.type === 'pay').reduce((s, t) => s + t.amount, 0);
+  const balance = (supplier.openingBalance || 0) + totalNewDebts - totalPaid;
+  const lastTransaction = transactions.length > 0
+    ? transactions.reduce((latest, t) => new Date(t.date) > new Date(latest.date) ? t : latest)
+    : null;
+
+  let status = 'paid';
+  if (balance < 0) status = 'credit';
+  else if (balance === 0) status = 'paid';
+  else if (balance < 1000) status = 'good';
+  else if (balance < 5000) status = 'medium';
+  else status = 'high';
+
+  return { ...supplier, totalNewDebts, totalPaid, balance, transactionsCount: transactions.length, lastTransaction, status, transactions };
+}
+
+const STATUS_COLORS = {
+  paid: '34C759', credit: '30B0C7', good: '007AFF', medium: 'FF9500', high: 'FF3B30'
+};
+const STATUS_LABELS = {
+  paid: 'مسدد', credit: 'له رصيد', good: 'جيد', medium: 'متوسط', high: 'مرتفع'
+};
+
+// =================================================================
+// التنقل بين الشاشات
+// =================================================================
+
+let currentTab = 'dashboard';
+
+function switchTab(tab) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+  document.getElementById('screen-' + tab).classList.add('active');
+  document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+  currentTab = tab;
+  render();
+  window.scrollTo(0, 0);
+}
+
+// =================================================================
+// الـ Modals
+// =================================================================
+
+function openModal(id) {
+  document.getElementById(id).classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+// =================================================================
+// إضافة/تعديل تاجر
+// =================================================================
+
+let editingSupplierId = null;
+
+function openAddSupplier() {
+  editingSupplierId = null;
+  document.getElementById('supplierModalTitle').textContent = 'تاجر جديد';
+  document.getElementById('supplierName').value = '';
+  document.getElementById('supplierContact').value = '';
+  document.getElementById('supplierPhone').value = '';
+  document.getElementById('supplierAddress').value = '';
+  document.getElementById('supplierOpeningBalance').value = '';
+  openModal('modalSupplier');
+  setTimeout(() => document.getElementById('supplierName').focus(), 100);
+}
+
+function saveSupplier() {
+  const name = document.getElementById('supplierName').value.trim();
+  if (!name) {
+    alert('يرجى إدخال اسم الشركة');
+    return;
+  }
+
+  const suppliers = loadSuppliers();
+  const data = {
+    id: editingSupplierId || generateId(),
+    name,
+    contactPerson: document.getElementById('supplierContact').value.trim(),
+    phoneNumber: document.getElementById('supplierPhone').value.trim(),
+    address: document.getElementById('supplierAddress').value.trim(),
+    openingBalance: parseFloat(document.getElementById('supplierOpeningBalance').value) || 0,
+    createdAt: new Date().toISOString(),
+    avatarColor: getColor(name)
+  };
+
+  if (editingSupplierId) {
+    const idx = suppliers.findIndex(s => s.id === editingSupplierId);
+    if (idx >= 0) suppliers[idx] = { ...suppliers[idx], ...data };
+  } else {
+    suppliers.push(data);
+  }
+
+  saveSuppliers(suppliers);
+  closeModal('modalSupplier');
+  render();
+}
+
+// =================================================================
+// إضافة معاملة
+// =================================================================
+
+let currentTransType = 'debt';
+
+function openAddTransaction(preselectedSupplierId) {
+  document.getElementById('transAmount').value = '';
+  document.getElementById('transInvoice').value = '';
+  document.getElementById('transNotes').value = '';
+  document.getElementById('transDate').value = new Date().toISOString().split('T')[0];
+
+  // ملء قائمة التجار
+  const suppliers = loadSuppliers();
+  const select = document.getElementById('transSupplier');
+  select.innerHTML = '<option value="">اختر تاجراً</option>' +
+    suppliers.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+
+  if (preselectedSupplierId) select.value = preselectedSupplierId;
+
+  setTransType('debt', document.querySelector('.type-btn.debt'));
+  openModal('modalTransaction');
+}
+
+function setTransType(type, btn) {
+  currentTransType = type;
+  document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  const input = document.getElementById('transAmount');
+  if (type === 'debt') {
+    input.classList.remove('pay');
+    document.getElementById('transPayment').value = 'deferred';
+  } else {
+    input.classList.add('pay');
+    document.getElementById('transPayment').value = 'cash';
+  }
+}
+
+function saveTransaction() {
+  const amount = parseFloat(document.getElementById('transAmount').value);
+  const supplierId = document.getElementById('transSupplier').value;
+
+  if (!amount || amount <= 0) { alert('يرجى إدخال مبلغ صحيح'); return; }
+  if (!supplierId) { alert('يرجى اختيار التاجر'); return; }
+
+  const transactions = loadTransactions();
+  transactions.push({
+    id: generateId(),
+    supplierId,
+    type: currentTransType,
+    amount,
+    date: document.getElementById('transDate').value,
+    invoiceNumber: document.getElementById('transInvoice').value.trim(),
+    paymentMethod: document.getElementById('transPayment').value,
+    notes: document.getElementById('transNotes').value.trim(),
+    createdAt: new Date().toISOString()
+  });
+
+  saveTransactions(transactions);
+  closeModal('modalTransaction');
+
+  // اهتزاز خفيف
+  if (navigator.vibrate) navigator.vibrate(50);
+
+  render();
+}
+
+// =================================================================
+// تفاصيل التاجر
+// =================================================================
+
+let currentSupplierId = null;
+
+function openSupplierDetail(id) {
+  currentSupplierId = id;
+  const supplier = getSupplierData(loadSuppliers().find(s => s.id === id));
+  document.getElementById('detailModalTitle').textContent = supplier.name;
+
+  const body = document.getElementById('supplierDetailBody');
+  const balanceClass = supplier.status === 'paid' || supplier.status === 'credit' ? 'paid' :
+                       supplier.status === 'good' ? 'good' :
+                       supplier.status === 'medium' ? 'medium' : '';
+
+  body.innerHTML = `
+    <div style="text-align:center; padding: 8px 0 14px;">
+      <div class="avatar lg" style="margin:0 auto; background:rgba(${parseInt(supplier.avatarColor.substr(0,2),16)},${parseInt(supplier.avatarColor.substr(2,2),16)},${parseInt(supplier.avatarColor.substr(4,2),16)},0.15); color:#${supplier.avatarColor};">
+        ${getInitials(supplier.name)}
+      </div>
+      ${supplier.contactPerson ? `<div style="margin-top:10px; color:#8E8E93; font-size:13px;">👤 ${supplier.contactPerson}</div>` : ''}
+      ${supplier.phoneNumber ? `<div style="margin-top:4px; color:#8E8E93; font-size:13px;">📱 ${supplier.phoneNumber}</div>` : ''}
+    </div>
+
+    <div class="mini-stats" style="margin: 0 0 12px;">
+      <div class="mini-stat">
+        <div class="mini-stat-label">القديمة</div>
+        <div class="mini-stat-value" style="color:#FF9500">${formatShort(supplier.openingBalance || 0)}</div>
+      </div>
+      <div class="mini-stat">
+        <div class="mini-stat-label">الجديدة</div>
+        <div class="mini-stat-value" style="color:#FF3B30">${formatShort(supplier.totalNewDebts)}</div>
+      </div>
+      <div class="mini-stat">
+        <div class="mini-stat-label">المسدد</div>
+        <div class="mini-stat-value" style="color:#34C759">${formatShort(supplier.totalPaid)}</div>
+      </div>
+    </div>
+
+    <div class="balance-card ${balanceClass}" style="margin: 0 0 12px;">
+      <div class="balance-label">الرصيد المتبقي</div>
+      <div class="balance-value">${formatMoney(supplier.balance)}</div>
+    </div>
+
+    <div class="quick-actions" style="margin: 0 0 12px;">
+      <button class="action-btn" onclick="callSupplier('${supplier.phoneNumber}')">
+        <div style="font-size:18px;">📞</div><span>اتصال</span>
+      </button>
+      <button class="action-btn" onclick="whatsappSupplier('${supplier.phoneNumber}')">
+        <div style="font-size:18px;">💬</div><span>واتساب</span>
+      </button>
+      <button class="action-btn" onclick="editSupplierFromDetail()">
+        <div style="font-size:18px;">✏️</div><span>تعديل</span>
+      </button>
+      <button class="action-btn" onclick="addTransForSupplier()">
+        <div style="font-size:18px;">➕</div><span>معاملة</span>
+      </button>
+    </div>
+
+    <div class="form-section-title" style="padding-right: 0;">سجل المعاملات (${supplier.transactionsCount})</div>
+    <div class="card" style="margin: 0;">
+      ${supplier.transactions.length === 0
+        ? '<div style="padding:20px; text-align:center; color:#8E8E93;">لا توجد معاملات</div>'
+        : supplier.transactions
+            .sort((a,b) => new Date(b.date) - new Date(a.date))
+            .map(t => `
+              <div class="transaction-row" onclick="deleteTransaction('${t.id}')">
+                <div class="trans-icon ${t.type}">${t.type === 'debt' ? '↗' : '↘'}</div>
+                <div class="row-content">
+                  <div class="row-title" style="font-size:14px;">${t.type === 'debt' ? 'دين جديد' : 'دفعة سداد'}</div>
+                  <div class="row-sub">${formatDate(t.date)}${t.invoiceNumber ? ' · ' + t.invoiceNumber : ''}</div>
+                </div>
+                <div class="row-end">
+                  <div class="row-amount" style="color:#${t.type === 'debt' ? 'FF3B30' : '34C759'}">
+                    ${t.type === 'debt' ? '+' : '−'}${formatShort(t.amount)}
+                  </div>
+                </div>
+              </div>
+            `).join('')
+      }
+    </div>
+  `;
+
+  openModal('modalSupplierDetail');
+}
+
+function callSupplier(phone) {
+  if (!phone) { alert('لا يوجد رقم هاتف لهذا التاجر'); return; }
+  window.location.href = 'tel:' + phone;
+}
+
+function whatsappSupplier(phone) {
+  if (!phone) { alert('لا يوجد رقم هاتف لهذا التاجر'); return; }
+  const cleaned = phone.replace(/[^0-9]/g, '');
+  window.open('https://wa.me/' + cleaned, '_blank');
+}
+
+function editSupplierFromDetail() {
+  const supplier = loadSuppliers().find(s => s.id === currentSupplierId);
+  if (!supplier) return;
+  editingSupplierId = supplier.id;
+  document.getElementById('supplierModalTitle').textContent = 'تعديل التاجر';
+  document.getElementById('supplierName').value = supplier.name;
+  document.getElementById('supplierContact').value = supplier.contactPerson || '';
+  document.getElementById('supplierPhone').value = supplier.phoneNumber || '';
+  document.getElementById('supplierAddress').value = supplier.address || '';
+  document.getElementById('supplierOpeningBalance').value = supplier.openingBalance || 0;
+  closeModal('modalSupplierDetail');
+  openModal('modalSupplier');
+}
+
+function addTransForSupplier() {
+  closeModal('modalSupplierDetail');
+  openAddTransaction(currentSupplierId);
+}
+
+function deleteCurrentSupplier() {
+  if (!confirm('هل تريد حذف هذا التاجر وكل معاملاته؟ لا يمكن التراجع.')) return;
+  const suppliers = loadSuppliers().filter(s => s.id !== currentSupplierId);
+  const transactions = loadTransactions().filter(t => t.supplierId !== currentSupplierId);
+  saveSuppliers(suppliers);
+  saveTransactions(transactions);
+  closeModal('modalSupplierDetail');
+  render();
+}
+
+function deleteTransaction(id) {
+  if (!confirm('هل تريد حذف هذه المعاملة؟')) return;
+  const transactions = loadTransactions().filter(t => t.id !== id);
+  saveTransactions(transactions);
+  openSupplierDetail(currentSupplierId);
+  render();
+}
+
+// =================================================================
+// الفلترة
+// =================================================================
+
+let currentFilter = 'all';
+let currentTransFilter = 'all';
+
+function setFilter(filter, btn) {
+  currentFilter = filter;
+  document.querySelectorAll('#filterChips .chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  renderSuppliers();
+}
+
+function setTransFilter(filter, btn) {
+  currentTransFilter = filter;
+  btn.parentElement.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  renderTransactions();
+}
+
+// =================================================================
+// العرض
+// =================================================================
+
+function render() {
+  renderDashboard();
+  renderSuppliers();
+  renderTransactions();
+  renderAnalytics();
+}
+
+function renderDashboard() {
+  const suppliers = loadSuppliers().map(getSupplierData);
+  const totalBalance = suppliers.reduce((s, sup) => s + sup.balance, 0);
+  const totalNewDebts = suppliers.reduce((s, sup) => s + sup.totalNewDebts, 0);
+  const totalPaid = suppliers.reduce((s, sup) => s + sup.totalPaid, 0);
+
+  document.getElementById('totalBalance').textContent = formatMoney(totalBalance);
+  document.getElementById('totalNewDebts').textContent = '+' + formatShort(totalNewDebts);
+  document.getElementById('totalPaid').textContent = formatShort(totalPaid);
+  document.getElementById('suppliersCount').textContent = suppliers.length;
+
+  // الإحصائيات الشهرية
+  const now = new Date();
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+  const monthTrans = loadTransactions().filter(t => new Date(t.date) >= monthStart);
+  document.getElementById('monthlyDebts').textContent = formatShort(
+    monthTrans.filter(t => t.type === 'debt').reduce((s, t) => s + t.amount, 0)
+  );
+  document.getElementById('monthlyPayments').textContent = formatShort(
+    monthTrans.filter(t => t.type === 'pay').reduce((s, t) => s + t.amount, 0)
+  );
+
+  // أعلى التجار
+  const top5 = suppliers.filter(s => s.balance > 0).sort((a, b) => b.balance - a.balance).slice(0, 5);
+  document.getElementById('topSuppliers').innerHTML = top5.length === 0
+    ? '<div class="empty-state" style="padding:30px"><div>لا يوجد تجار بعد</div></div>'
+    : top5.map(s => supplierRowHtml(s)).join('');
+
+  // آخر المعاملات
+  const recent = loadTransactions().sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5);
+  document.getElementById('recentTransactions').innerHTML = recent.length === 0
+    ? '<div class="empty-state" style="padding:30px"><div>لا توجد معاملات</div></div>'
+    : recent.map(t => transactionRowHtml(t, true)).join('');
+}
+
+function supplierRowHtml(s) {
+  return `
+    <div class="list-row" onclick="openSupplierDetail('${s.id}')">
+      <div class="avatar" style="background:rgba(${parseInt(s.avatarColor.substr(0,2),16)},${parseInt(s.avatarColor.substr(2,2),16)},${parseInt(s.avatarColor.substr(4,2),16)},0.15); color:#${s.avatarColor};">
+        ${getInitials(s.name)}
+      </div>
+      <div class="row-content">
+        <div class="row-title">${s.name}</div>
+        <div class="row-sub">${s.transactionsCount} معاملة${s.lastTransaction ? ' · ' + relativeDate(s.lastTransaction.date) : ''}</div>
+      </div>
+      <div class="row-end">
+        <div class="row-amount" style="color:#${STATUS_COLORS[s.status]}">${formatShort(s.balance)}</div>
+        <span class="status-badge" style="background:rgba(${parseInt(STATUS_COLORS[s.status].substr(0,2),16)},${parseInt(STATUS_COLORS[s.status].substr(2,2),16)},${parseInt(STATUS_COLORS[s.status].substr(4,2),16)},0.15); color:#${STATUS_COLORS[s.status]};">${STATUS_LABELS[s.status]}</span>
+      </div>
+    </div>
+  `;
+}
+
+function transactionRowHtml(t, showSupplier) {
+  const supplier = loadSuppliers().find(s => s.id === t.supplierId);
+  return `
+    <div class="list-row">
+      <div class="trans-icon ${t.type}">${t.type === 'debt' ? '↗' : '↘'}</div>
+      <div class="row-content">
+        <div class="row-title">${t.type === 'debt' ? 'دين جديد' : 'دفعة سداد'}${showSupplier && supplier ? ' · ' + supplier.name : ''}</div>
+        <div class="row-sub">${formatDate(t.date)}${t.invoiceNumber ? ' · ' + t.invoiceNumber : ''}</div>
+      </div>
+      <div class="row-end">
+        <div class="row-amount" style="color:#${t.type === 'debt' ? 'FF3B30' : '34C759'}">
+          ${t.type === 'debt' ? '+' : '−'}${formatShort(t.amount)}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderSuppliers() {
+  let suppliers = loadSuppliers().map(getSupplierData);
+  const search = document.getElementById('supplierSearch').value.toLowerCase();
+
+  // عداد الفلاتر
+  document.getElementById('count-all').textContent = suppliers.length;
+  document.getElementById('count-high').textContent = suppliers.filter(s => s.status === 'high').length;
+  document.getElementById('count-medium').textContent = suppliers.filter(s => s.status === 'medium').length;
+  document.getElementById('count-good').textContent = suppliers.filter(s => s.status === 'good').length;
+  document.getElementById('count-paid').textContent = suppliers.filter(s => s.status === 'paid' || s.status === 'credit').length;
+
+  if (currentFilter !== 'all') {
+    suppliers = suppliers.filter(s => {
+      if (currentFilter === 'paid') return s.status === 'paid' || s.status === 'credit';
+      return s.status === currentFilter;
+    });
+  }
+
+  if (search) suppliers = suppliers.filter(s => s.name.toLowerCase().includes(search));
+
+  suppliers.sort((a, b) => b.balance - a.balance);
+
+  document.getElementById('suppliersList').innerHTML = suppliers.length === 0
+    ? `<div class="empty-state"><div class="empty-state-icon">🏢</div><div class="empty-state-title">${search ? 'لا توجد نتائج' : 'لا يوجد تجار بعد'}</div>${!search ? '<div class="empty-state-sub">اضغط + لإضافة تاجر جديد</div>' : ''}</div>`
+    : suppliers.map(s => supplierRowHtml(s)).join('');
+}
+
+function renderTransactions() {
+  let transactions = loadTransactions();
+
+  document.getElementById('allDebts').textContent = formatShort(
+    transactions.filter(t => t.type === 'debt').reduce((s, t) => s + t.amount, 0)
+  );
+  document.getElementById('allPayments').textContent = formatShort(
+    transactions.filter(t => t.type === 'pay').reduce((s, t) => s + t.amount, 0)
+  );
+
+  if (currentTransFilter !== 'all') {
+    transactions = transactions.filter(t => t.type === currentTransFilter);
+  }
+
+  transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  if (transactions.length === 0) {
+    document.getElementById('transactionsList').innerHTML =
+      '<div class="empty-state"><div class="empty-state-icon">📋</div><div class="empty-state-title">لا توجد معاملات</div></div>';
+    return;
+  }
+
+  // تجميع حسب التاريخ
+  const grouped = {};
+  transactions.forEach(t => {
+    const key = formatDate(t.date);
+    if (!grouped[key]) grouped[key] = [];
+    grouped[key].push(t);
+  });
+
+  let html = '';
+  Object.keys(grouped).forEach(date => {
+    html += `<div class="section-header"><span>${date}</span></div>`;
+    html += '<div class="card">';
+    html += grouped[date].map(t => transactionRowHtml(t, true)).join('');
+    html += '</div>';
+  });
+
+  document.getElementById('transactionsList').innerHTML = html;
+}
+
+function renderAnalytics() {
+  const suppliers = loadSuppliers().map(getSupplierData);
+
+  // الرسم الدائري
+  const statusCounts = { high: 0, medium: 0, good: 0, paid: 0 };
+  suppliers.forEach(s => {
+    if (s.status === 'high') statusCounts.high++;
+    else if (s.status === 'medium') statusCounts.medium++;
+    else if (s.status === 'good') statusCounts.good++;
+    else statusCounts.paid++;
+  });
+
+  const total = suppliers.length;
+  let cumulativePercent = 0;
+  let donutHtml = '<circle cx="18" cy="18" r="14" fill="none" stroke="#F2F2F7" stroke-width="6"/>';
+  let legendHtml = '';
+
+  if (total > 0) {
+    [
+      ['high', '🔴 مرتفع', 'FF3B30'],
+      ['medium', '🟡 متوسط', 'FF9500'],
+      ['good', '🔵 جيد', '007AFF'],
+      ['paid', '🟢 مسدد', '34C759']
+    ].forEach(([key, label, color]) => {
+      const count = statusCounts[key];
+      const percent = total > 0 ? (count / total) * 100 : 0;
+      if (percent > 0) {
+        const dashArray = percent + ' ' + (100 - percent);
+        const dashOffset = 25 - cumulativePercent;
+        donutHtml += `<circle cx="18" cy="18" r="14" fill="none" stroke="#${color}" stroke-width="6" stroke-dasharray="${dashArray}" stroke-dashoffset="${dashOffset}" pathLength="100" transform="rotate(-90 18 18)"/>`;
+        cumulativePercent += percent;
+      }
+      legendHtml += `
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#${color}"></div>
+          <span>${label}</span>
+          <span style="margin-right:auto; color:#8E8E93;">${count}</span>
+        </div>
+      `;
+    });
+  }
+
+  donutHtml += `<text x="18" y="17" font-size="5" text-anchor="middle" fill="currentColor" font-weight="600">${total}</text>`;
+  donutHtml += `<text x="18" y="22" font-size="2.5" text-anchor="middle" fill="#8E8E93">تاجر</text>`;
+  document.getElementById('donutChart').innerHTML = donutHtml;
+  document.getElementById('donutLegend').innerHTML = legendHtml || '<div style="color:#8E8E93; font-size:12px;">لا توجد بيانات</div>';
+
+  // أعلى 5 تجار
+  const top5 = suppliers.filter(s => s.balance > 0).sort((a, b) => b.balance - a.balance).slice(0, 5);
+  const maxBalance = top5[0]?.balance || 1;
+
+  document.getElementById('topBarChart').innerHTML = top5.length === 0
+    ? '<div style="color:#8E8E93; text-align:center; padding:20px;">لا توجد بيانات</div>'
+    : top5.map(s => `
+        <div class="progress-row">
+          <div class="progress-name">${s.name}</div>
+          <div class="progress-bar"><div class="progress-fill" style="width:${(s.balance/maxBalance)*100}%; background:#${STATUS_COLORS[s.status]};"></div></div>
+          <div class="progress-amount" style="color:#${STATUS_COLORS[s.status]}">${formatShort(s.balance)}</div>
+        </div>
+      `).join('');
+
+  // الرسم الخطي - آخر 6 أشهر
+  const transactions = loadTransactions();
+  const months = [];
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date();
+    d.setMonth(d.getMonth() - i);
+    const monthStart = new Date(d.getFullYear(), d.getMonth(), 1);
+    const monthEnd = new Date(d.getFullYear(), d.getMonth() + 1, 1);
+
+    const debts = transactions
+      .filter(t => t.type === 'debt' && new Date(t.date) >= monthStart && new Date(t.date) < monthEnd)
+      .reduce((s, t) => s + t.amount, 0);
+    const payments = transactions
+      .filter(t => t.type === 'pay' && new Date(t.date) >= monthStart && new Date(t.date) < monthEnd)
+      .reduce((s, t) => s + t.amount, 0);
+
+    months.push({
+      name: ['ينا','فبر','مار','أبر','ماي','يون','يول','أغس','سبت','أكت','نوف','ديس'][d.getMonth()],
+      debts, payments
+    });
+  }
+
+  const maxVal = Math.max(...months.map(m => Math.max(m.debts, m.payments)), 1);
+  const w = 320, h = 160, padding = 30;
+  const xStep = (w - 2*padding) / (months.length - 1);
+
+  let chartHtml = `
+    <line x1="${padding}" y1="${h-padding}" x2="${w-padding}" y2="${h-padding}" stroke="#E5E5EA" stroke-width="0.5"/>
+    <line x1="${padding}" y1="${h-padding-40}" x2="${w-padding}" y2="${h-padding-40}" stroke="#E5E5EA" stroke-width="0.5" stroke-dasharray="2,2"/>
+    <line x1="${padding}" y1="${h-padding-80}" x2="${w-padding}" y2="${h-padding-80}" stroke="#E5E5EA" stroke-width="0.5" stroke-dasharray="2,2"/>
+  `;
+
+  const debtPoints = months.map((m, i) => {
+    const x = padding + i * xStep;
+    const y = h - padding - (m.debts / maxVal) * (h - 2*padding);
+    return `${x},${y}`;
+  }).join(' ');
+
+  const payPoints = months.map((m, i) => {
+    const x = padding + i * xStep;
+    const y = h - padding - (m.payments / maxVal) * (h - 2*padding);
+    return `${x},${y}`;
+  }).join(' ');
+
+  chartHtml += `<polyline points="${debtPoints}" fill="none" stroke="#FF3B30" stroke-width="2" stroke-linejoin="round"/>`;
+  chartHtml += `<polyline points="${payPoints}" fill="none" stroke="#34C759" stroke-width="2" stroke-linejoin="round"/>`;
+
+  months.forEach((m, i) => {
+    const x = padding + i * xStep;
+    const yDebt = h - padding - (m.debts / maxVal) * (h - 2*padding);
+    const yPay = h - padding - (m.payments / maxVal) * (h - 2*padding);
+    chartHtml += `<circle cx="${x}" cy="${yDebt}" r="3" fill="#FF3B30"/>`;
+    chartHtml += `<circle cx="${x}" cy="${yPay}" r="3" fill="#34C759"/>`;
+    chartHtml += `<text x="${x}" y="${h-10}" font-size="9" fill="#8E8E93" text-anchor="middle">${m.name}</text>`;
+  });
+
+  document.getElementById('lineChart').innerHTML = chartHtml;
+}
+
+// =================================================================
+// التصدير/الاستيراد
+// =================================================================
+
+function exportData() {
+  const data = {
+    version: '1.0',
+    exportDate: new Date().toISOString(),
+    suppliers: loadSuppliers(),
+    transactions: loadTransactions()
+  };
+
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `pharmacy_backup_${new Date().toISOString().split('T')[0]}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+
+  alert('✅ تم تصدير النسخة الاحتياطية بنجاح');
+}
+
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!data.suppliers || !data.transactions) {
+        alert('ملف غير صالح');
+        return;
+      }
+
+      if (!confirm('سيتم استبدال كل البيانات الحالية. هل أنت متأكد؟')) return;
+
+      saveSuppliers(data.suppliers);
+      saveTransactions(data.transactions);
+      render();
+      alert('✅ تم استيراد البيانات بنجاح');
+    } catch (err) {
+      alert('خطأ في قراءة الملف: ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+}
+
+function clearAllData() {
+  if (!confirm('⚠️ سيتم حذف كل البيانات نهائياً. هل أنت متأكد؟')) return;
+  if (!confirm('هل أنت متأكد تماماً؟ لا يمكن التراجع!')) return;
+  localStorage.removeItem(DB_KEY_SUPPLIERS);
+  localStorage.removeItem(DB_KEY_TRANSACTIONS);
+  render();
+  alert('تم حذف كل البيانات');
+}
+
+// =================================================================
+// البيانات التجريبية
+// =================================================================
+
+function loadSampleData() {
+  if (loadSuppliers().length > 0) {
+    if (!confirm('توجد بيانات حالياً. سيتم استبدالها بالبيانات التجريبية. متابعة؟')) return;
+  }
+
+  const sampleSuppliers = [
+    { name: 'شركة الحكمة للأدوية', contactPerson: 'أحمد محمد', phoneNumber: '0912345678', openingBalance: 3500 },
+    { name: 'شركة النيل للأدوية', contactPerson: 'محمود علي', phoneNumber: '0913456789', openingBalance: 2000 },
+    { name: 'شركة الفجر الجديد', contactPerson: 'علي حسن', phoneNumber: '0914567890', openingBalance: 800 },
+    { name: 'شركة الشفاء الطبية', contactPerson: 'خالد إبراهيم', phoneNumber: '0915678901', openingBalance: 2500 },
+    { name: 'شركة الدواء العربية', contactPerson: 'سامي عبدالله', phoneNumber: '0916789012', openingBalance: 4000 },
+    { name: 'شركة المتحدة للأدوية', contactPerson: 'ياسر محمد', phoneNumber: '0917890123', openingBalance: 1500 },
+    { name: 'شركة الصحة للتوزيع', contactPerson: 'عمر سالم', phoneNumber: '0918901234', openingBalance: 400 },
+  ];
+
+  const suppliers = sampleSuppliers.map(s => ({
+    ...s, id: generateId(), createdAt: new Date().toISOString(), avatarColor: getColor(s.name)
+  }));
+
+  const transactions = [];
+  const today = new Date();
+
+  const sample = [
+    [0, 22, 'debt', 2500, 'ف-001', 'deferred'],
+    [1, 20, 'debt', 3200, 'ف-002', 'deferred'],
+    [0, 18, 'pay', 1000, 'سند-001', 'cash'],
+    [2, 16, 'debt', 1800, 'ف-003', 'deferred'],
+    [1, 13, 'pay', 1500, 'سند-002', 'bank'],
+    [3, 11, 'debt', 4500, 'ف-004', 'deferred'],
+    [0, 8, 'pay', 500, 'سند-003', 'cash'],
+    [4, 5, 'debt', 2200, 'ف-005', 'deferred'],
+    [2, 3, 'pay', 800, 'سند-004', 'cash'],
+    [3, 1, 'pay', 2000, 'سند-005', 'cheque'],
+    [0, 0, 'debt', 1700, 'ف-006', 'deferred'],
+  ];
+
+  sample.forEach(([idx, daysAgo, type, amount, inv, pm]) => {
+    const date = new Date(today);
+    date.setDate(date.getDate() - daysAgo);
+    transactions.push({
+      id: generateId(),
+      supplierId: suppliers[idx].id,
+      type, amount,
+      date: date.toISOString().split('T')[0],
+      invoiceNumber: inv,
+      paymentMethod: pm,
+      notes: '',
+      createdAt: new Date().toISOString()
+    });
+  });
+
+  saveSuppliers(suppliers);
+  saveTransactions(transactions);
+  render();
+  alert('✅ تم تحميل البيانات التجريبية');
+}
+
+// =================================================================
+// شاشة الترحيب
+// =================================================================
+
+function hideWelcome() {
+  document.getElementById('welcomeOverlay').classList.remove('active');
+  localStorage.setItem(DB_KEY_WELCOME, '1');
+}
+
+function showInstallGuide() {
+  document.getElementById('welcomeOverlay').classList.add('active');
+}
+
+function dismissInstall() {
+  document.getElementById('installBanner').classList.add('hidden');
+  localStorage.setItem('install_dismissed', '1');
+}
+
+// =================================================================
+// التشغيل
+// =================================================================
+
+window.addEventListener('DOMContentLoaded', () => {
+  // عرض شاشة الترحيب أول مرة
+  if (!localStorage.getItem(DB_KEY_WELCOME)) {
+    document.getElementById('welcomeOverlay').classList.add('active');
+  }
+
+  // عرض شريط التثبيت إذا لم يكن مثبتاً
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
+                       window.navigator.standalone === true;
+  if (!isStandalone && !localStorage.getItem('install_dismissed')) {
+    document.getElementById('installBanner').classList.remove('hidden');
+  }
+
+  // تحميل بيانات تجريبية تلقائياً أول مرة
+  if (loadSuppliers().length === 0 && !localStorage.getItem('skipped_sample')) {
+    const sampleSuppliers = [
+      { name: 'شركة الحكمة للأدوية', contactPerson: 'أحمد محمد', phoneNumber: '0912345678', openingBalance: 3500 },
+      { name: 'شركة النيل للأدوية', contactPerson: 'محمود علي', phoneNumber: '0913456789', openingBalance: 2000 },
+      { name: 'شركة الفجر الجديد', contactPerson: 'علي حسن', phoneNumber: '0914567890', openingBalance: 800 },
+      { name: 'شركة الشفاء الطبية', contactPerson: 'خالد إبراهيم', phoneNumber: '0915678901', openingBalance: 2500 },
+      { name: 'شركة الدواء العربية', contactPerson: 'سامي عبدالله', phoneNumber: '0916789012', openingBalance: 4000 },
+    ];
+
+    const suppliers = sampleSuppliers.map(s => ({
+      ...s, id: generateId(), createdAt: new Date().toISOString(), avatarColor: getColor(s.name)
+    }));
+
+    const transactions = [];
+    const today = new Date();
+    [
+      [0, 18, 'debt', 2500, 'ف-001', 'deferred'],
+      [1, 13, 'debt', 3200, 'ف-002', 'deferred'],
+      [0, 8, 'pay', 1000, 'سند-001', 'cash'],
+      [2, 5, 'debt', 1800, 'ف-003', 'deferred'],
+      [3, 2, 'pay', 1500, 'سند-002', 'bank']
+    ].forEach(([idx, daysAgo, type, amount, inv, pm]) => {
+      const date = new Date(today);
+      date.setDate(date.getDate() - daysAgo);
+      transactions.push({
+        id: generateId(),
+        supplierId: suppliers[idx].id,
+        type, amount,
+        date: date.toISOString().split('T')[0],
+        invoiceNumber: inv,
+        paymentMethod: pm,
+        notes: '',
+        createdAt: new Date().toISOString()
+      });
+    });
+
+    saveSuppliers(suppliers);
+    saveTransactions(transactions);
+    localStorage.setItem('skipped_sample', '1');
+  }
+
+  render();
+});
+
+// منع تكبير الشاشة بالنقر المزدوج
+let lastTouchEnd = 0;
+document.addEventListener('touchend', (e) => {
+  const now = Date.now();
+  if (now - lastTouchEnd <= 300) e.preventDefault();
+  lastTouchEnd = now;
+}, false);
+
+// إغلاق Modal عند الضغط على الخلفية
+document.querySelectorAll('.modal-overlay').forEach(o => {
+  o.addEventListener('click', (e) => {
+    if (e.target === o) o.classList.remove('active');
+  });
+});
+</script>
+</body>
+</html>
